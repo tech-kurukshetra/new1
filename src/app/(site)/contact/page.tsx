@@ -1,36 +1,28 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { CheckCircle2, Loader2, Mail, MessageSquare, User, Send, MapPin, Phone } from 'lucide-react';
-import { useAuth, useUser, addDocumentNonBlocking, initiateAnonymousSignIn, useFirestore } from '@/firebase';
+import { CheckCircle2, Loader2, Mail, MessageSquare, User, Send, MapPin } from 'lucide-react';
+import { addDocumentNonBlocking, useFirestore } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const { user, isUserLoading } = useUser();
-  const auth = useAuth();
   const firestore = useFirestore();
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (!isUserLoading && !user) {
-      initiateAnonymousSignIn(auth);
-    }
-  }, [isUserLoading, user, auth]);
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!user || !firestore) {
+    if (!firestore) {
       toast({
         variant: 'destructive',
-        title: 'Authentication Error',
-        description: 'You must be signed in to send a message.',
+        title: 'Connection Error',
+        description: 'Could not connect to the database. Please try again later.',
       });
       return;
     }
@@ -95,7 +87,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                     <h3 className="font-headline text-lg text-white uppercase tracking-widest">Location</h3>
-                    <p className="text-muted-foreground font-light">Kurukshetra University, Kurukshetra, Haryana 136119, India</p>
+                    <p className="text-muted-foreground font-light">Chimanbhai Patel Institute Campus, SG Highway, Near Prahlad Nagar, Ahmedabad, Gujarat - 380015.</p>
                 </div>
             </div>
             <div className="flex items-start gap-4">
@@ -104,23 +96,14 @@ export default function ContactPage() {
                 </div>
                 <div>
                     <h3 className="font-headline text-lg text-white uppercase tracking-widest">General Inquiries</h3>
-                    <a href="mailto:contact@kurukshetra.tech" className="text-muted-foreground font-light hover:text-primary transition-colors">contact@kurukshetra.tech</a>
-                </div>
-            </div>
-            <div className="flex items-start gap-4">
-                <div className="glass-panel border-primary/20 p-3 mt-1">
-                    <Phone className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                    <h3 className="font-headline text-lg text-white uppercase tracking-widest">Phone</h3>
-                    <p className="text-muted-foreground font-light">+91 123 456 7890</p>
+                    <a href="mailto:btech_events@svgu.ac.in" className="text-muted-foreground font-light hover:text-primary transition-colors">btech_events@svgu.ac.in</a>
                 </div>
             </div>
           </div>
 
           <div className="glass-panel border-primary/10 rounded-none overflow-hidden aspect-[4/3]">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3457.804559858681!2d76.8159993151122!3d29.95627998192078!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390e3f424a48a27f%3A0x8e5a97914560a34a!2sKurukshetra%20University%2C%20Kurukshetra!5e0!3m2!1sen!2sin!4v1678283430585!5m2!1sen!2sin"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3671.936338805703!2d72.50852571542369!3d23.02613942183218!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e856359473bbf%3A0x28a6f3a61f5b5f0!2sChimanbhai%20Patel%20Institute!5e0!3m2!1sen!2sin!4v1622038753215!5m2!1sen!2sin"
               width="100%"
               height="100%"
               style={{ border: 0 }}
@@ -160,10 +143,10 @@ export default function ContactPage() {
                <div className="pt-6">
                   <Button 
                   type="submit" 
-                  disabled={isSubmitting || isUserLoading || !user}
+                  disabled={isSubmitting || !firestore}
                   className="w-full bg-primary hover:bg-primary/80 py-7 font-headline tracking-[0.4em] text-lg rounded-none transition-all group"
                   >
-                  {isSubmitting || isUserLoading ? (
+                  {isSubmitting ? (
                       <div className="flex items-center gap-3">
                       <Loader2 className="h-6 w-6 animate-spin" />
                       <span>TRANSMITTING...</span>

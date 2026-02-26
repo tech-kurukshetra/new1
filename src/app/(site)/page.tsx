@@ -127,7 +127,7 @@ export default function Home() {
             <div className="relative h-full min-h-[300px] lg:min-h-[500px]">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-accent/20 blur-3xl" />
               <div className="relative w-full h-full p-4">
-                  <div className="relative w-full h-full glass-panel border-primary/20 rounded-none overflow-hidden rotate-[-3deg] hover:rotate-0 transition-transform duration-500">
+                  <div className="relative w-full h-full glass-panel border-primary/20 rounded-none overflow-hidden hover:rotate-0 transition-transform duration-500">
                       <Image 
                           src={aboutImg?.imageUrl || ''}
                           alt="About TECH KURUKSHETRA"

@@ -11,7 +11,7 @@ import { Skeleton } from '../ui/skeleton';
 const defaultLinks = {
     festival: [ { title: "Home", url: "/" }, { title: "Arenas", url: "/arenas" }, { title: "Timeline", url: "/timeline" } ],
     connect: [ { title: "Announcements", url: "/announcements" }, { title: "The Architects", url: "/team" }, { title: "Contact Us", url: "/contact" }, { title: "Get Your Pass", url: "/register" } ],
-    legal: [ { title: "Privacy Protocol", url: "/privacy-protocol" }, { title: "Terms of Entry", url: "/terms-of-entry" }, { title: "Admin Console", url: "/admin" } ],
+    legal: [ { title: "Privacy Protocol", url: "/privacy-protocol" }, { title: "Terms of Entry", url: "/terms-of-entry" } ],
 };
 
 const defaultSocials = [
@@ -19,6 +19,7 @@ const defaultSocials = [
     { id: 'twitter', platform: 'Twitter', iconName: 'Twitter', url: '#' },
     { id: 'linkedin', platform: 'LinkedIn', iconName: 'Linkedin', url: '#' },
     { id: 'github', platform: 'Github', iconName: 'Github', url: '#' },
+    { id: 'mail', platform: 'Mail', iconName: 'Mail', url: 'btech_events@svgu.ac.in' },
 ];
 
 function FooterLinkColumn({ title, links, isLoading }: { title: string, links: {title: string, url: string}[], isLoading: boolean }) {
