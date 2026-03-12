@@ -1249,94 +1249,213 @@ export default function DashboardPage() {
                 <CardTitle className="font-headline text-xl tracking-widest flex items-center gap-2 uppercase">
                   <Users className="w-5 h-5 text-accent" /> WARRIOR ARCHIVE
                 </CardTitle>
-                <CardDescription className="text-[10px] uppercase tracking-widest mt-1">Live Manifest of Verified Identities</CardDescription>
+                <CardDescription className="text-[10px] uppercase tracking-widest mt-1">
+                  Live Manifest · {registrations?.length ?? 0} Total · {registrations?.filter((r: any) => r.paymentStatus === 'Verified').length ?? 0} Verified
+                </CardDescription>
               </div>
-              <Button variant="outline" className="border-primary/20 text-[10px] font-headline tracking-widest rounded-none uppercase w-full md:w-auto">EXPORT MANIFEST</Button>
+              <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                <Input
+                  placeholder="Search by name / email / event..."
+                  value={(typeof window !== 'undefined' ? (window as any).__regSearch : '') || ''}
+                  onChange={e => { if (typeof window !== 'undefined') { (window as any).__regSearch = e.target.value; } }}
+                  className="bg-white/5 border-white/10 rounded-none text-xs w-full sm:w-64"
+                  id="reg-search-input"
+                />
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="overflow-x-auto">
               <Table>
                 <TableHeader className="border-white/10">
                   <TableRow className="hover:bg-transparent">
-                    <TableHead className="text-[10px] uppercase tracking-widest">Identity</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-widest">Communication</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-widest">Arena</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-widest">Verification</TableHead>
+                    <TableHead className="text-[10px] uppercase tracking-widest">Leader / Order</TableHead>
+                    <TableHead className="text-[10px] uppercase tracking-widest">Contact</TableHead>
+                    <TableHead className="text-[10px] uppercase tracking-widest">Event</TableHead>
+                    <TableHead className="text-[10px] uppercase tracking-widest">Team</TableHead>
+                    <TableHead className="text-[10px] uppercase tracking-widest">Amount</TableHead>
+                    <TableHead className="text-[10px] uppercase tracking-widest">UTR</TableHead>
                     <TableHead className="text-[10px] uppercase tracking-widest">Payment</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-widest">Time</TableHead>
+                    <TableHead className="text-[10px] uppercase tracking-widest">Date</TableHead>
                     <TableHead className="text-[10px] uppercase tracking-widest text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {registrationsLoading && <TableRow><TableCell colSpan={7} className="text-center"><Loader2 className="mx-auto animate-spin" /></TableCell></TableRow>}
-                  {registrations?.map((reg) => (
-                    <TableRow key={reg.id} className="border-white/5 hover:bg-white/5">
-                      <TableCell className="text-[10px] uppercase font-bold text-white tracking-widest">{reg.fullName}</TableCell>
-                      <TableCell className="text-[10px] text-muted-foreground">{reg.email}</TableCell>
-                      <TableCell>
-                        <span className="text-[9px] px-2 py-0.5 bg-primary/20 text-primary border border-primary/20 font-headline uppercase">
-                          {reg.registeredEventIds?.[0] || 'N/A'}
-                        </span>
+                  {registrationsLoading && (
+                    <TableRow>
+                      <TableCell colSpan={9} className="text-center py-8">
+                        <Loader2 className="mx-auto animate-spin" />
                       </TableCell>
-                       <TableCell>
-                        {reg.isVerified ? (
-                          <Badge variant="outline" className="text-primary border-primary/40 text-[9px] uppercase tracking-widest"><ShieldCheck className="w-3 h-3 mr-1" />Verified</Badge>
-                        ) : (
-                          <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40 text-[9px] uppercase tracking-widest"><ShieldOff className="w-3 h-3 mr-1" />Not Verified</Badge>
+                    </TableRow>
+                  )}
+                  {!registrationsLoading && (!registrations || registrations.length === 0) && (
+                    <TableRow>
+                      <TableCell colSpan={9} className="text-center py-12 text-muted-foreground text-xs uppercase tracking-widest">
+                        No registrations yet. Warriors will appear here once they register.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {registrations?.map((reg: any) => (
+                    <TableRow key={reg.id} className="border-white/5 hover:bg-white/5 align-top">
+                      {/* Leader / Order */}
+                      <TableCell>
+                        <p className="text-[10px] uppercase font-bold text-white tracking-widest">{reg.fullName || '—'}</p>
+                        <p className="text-[9px] text-muted-foreground mt-0.5">{reg.university || reg.college || '—'}</p>
+                        {reg.orderId && (
+                          <p className="text-[9px] font-mono text-primary/70 mt-0.5">{reg.orderId}</p>
                         )}
                       </TableCell>
+                      {/* Contact */}
                       <TableCell>
-                        <Badge variant="outline" className="text-accent border-accent/40 text-[9px] uppercase">{reg.paymentStatus || 'Pending'}</Badge>
+                        <p className="text-[10px] text-muted-foreground">{reg.email || '—'}</p>
+                        <p className="text-[9px] text-muted-foreground/60 mt-0.5">{reg.phoneNumber || reg.phone || '—'}</p>
+                        <p className="text-[9px] text-muted-foreground/50 mt-0.5">{reg.course || '—'}</p>
                       </TableCell>
-                      <TableCell className="text-[10px] font-code text-muted-foreground/60">{new Date(reg.registrationDate).toLocaleString()}</TableCell>
-                       <TableCell className="text-right">
+                      {/* Event */}
+                      <TableCell>
+                        <span className="text-[9px] px-2 py-0.5 bg-primary/20 text-primary border border-primary/20 font-headline uppercase block w-fit">
+                          {reg.selectedEvent || reg.registeredEventIds?.[0] || 'N/A'}
+                        </span>
+                        {reg.eventCategory && (
+                          <span className="text-[8px] text-accent/70 mt-1 block uppercase tracking-widest">{reg.eventCategory}</span>
+                        )}
+                        {reg.teamName && (
+                          <span className="text-[9px] text-white/60 mt-1 block">🏷️ {reg.teamName}</span>
+                        )}
+                      </TableCell>
+                      {/* Team size */}
+                      <TableCell>
+                        {reg.teamMembers && reg.teamMembers.length > 0 ? (
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="ghost" className="h-auto p-0 text-[9px] text-accent hover:text-accent/80 uppercase tracking-widest font-headline">
+                                {reg.teamMembers.length + 1} members ↗
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="glass-panel border-primary/20 bg-black/80 rounded-none max-w-lg">
+                              <DialogHeader>
+                                <DialogTitle className="font-headline uppercase tracking-widest text-primary text-sm">
+                                  Team Members — {reg.teamName || reg.fullName}
+                                </DialogTitle>
+                              </DialogHeader>
+                              <div className="space-y-3 py-2 max-h-80 overflow-y-auto">
+                                {/* Leader */}
+                                <div className="glass-panel p-3 border border-primary/20">
+                                  <p className="text-[9px] text-primary uppercase tracking-widest mb-1">Member 1 (Leader)</p>
+                                  <p className="text-white text-xs font-bold">{reg.fullName}</p>
+                                  <p className="text-muted-foreground text-[10px]">{reg.email} · {reg.phoneNumber}</p>
+                                  <p className="text-muted-foreground/60 text-[9px]">{reg.university} · {reg.course}</p>
+                                </div>
+                                {/* Other members */}
+                                {reg.teamMembers.map((m: any, i: number) => (
+                                  <div key={i} className="glass-panel p-3 border border-white/10">
+                                    <p className="text-[9px] text-muted-foreground uppercase tracking-widest mb-1">Member {i + 2}</p>
+                                    <p className="text-white text-xs font-bold">{m.name}</p>
+                                    <p className="text-muted-foreground text-[10px]">{m.email} · {m.phone}</p>
+                                    {(m.college || m.course) && (
+                                      <p className="text-muted-foreground/60 text-[9px]">{m.college} · {m.course}</p>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        ) : (
+                          <span className="text-[9px] text-muted-foreground/50">Solo</span>
+                        )}
+                      </TableCell>
+                      {/* Amount */}
+                      <TableCell>
+                        <span className="text-[11px] font-headline text-white">
+                          {reg.amount ? `₹${reg.amount}` : '—'}
+                        </span>
+                      </TableCell>
+                      {/* UTR */}
+                      <TableCell>
+                        <span className="text-[9px] font-mono text-muted-foreground select-all">
+                          {reg.utrNumber || '—'}
+                        </span>
+                      </TableCell>
+                      {/* Payment status */}
+                      <TableCell>
+                        {reg.paymentStatus === 'Verified' ? (
+                          <Badge variant="outline" className="text-green-400 border-green-400/40 text-[9px] uppercase tracking-widest whitespace-nowrap">
+                            <ShieldCheck className="w-3 h-3 mr-1" />Verified
+                          </Badge>
+                        ) : reg.paymentStatus === 'Pending' ? (
+                          <Badge variant="outline" className="text-amber-400 border-amber-400/40 text-[9px] uppercase tracking-widest whitespace-nowrap">
+                            <AlertTriangle className="w-3 h-3 mr-1" />Pending
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40 text-[9px] uppercase tracking-widest">
+                            {reg.paymentStatus || 'N/A'}
+                          </Badge>
+                        )}
+                      </TableCell>
+                      {/* Date */}
+                      <TableCell className="text-[9px] font-code text-muted-foreground/60 whitespace-nowrap">
+                        {reg.registrationDate ? new Date(reg.registrationDate).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }) : '—'}
+                        <br />
+                        {reg.registrationDate ? new Date(reg.registrationDate).toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' }) : ''}
+                      </TableCell>
+                      {/* Actions */}
+                      <TableCell className="text-right">
+                        {/* Edit Dialog */}
                         <Dialog open={editingRegistration?.id === reg.id} onOpenChange={(isOpen) => !isOpen && setEditingRegistration(null)}>
                           <DialogTrigger asChild>
                             <Button variant="ghost" size="icon" onClick={() => setEditingRegistration(reg)} className="text-muted-foreground hover:text-primary">
                               <Pencil className="w-4 h-4" />
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="glass-panel border-primary/20 bg-black/60 rounded-none">
+                          <DialogContent className="glass-panel border-primary/20 bg-black/60 rounded-none max-w-md">
                             <DialogHeader>
-                              <DialogTitle className="font-headline uppercase tracking-widest text-primary">Edit Registration</DialogTitle>
+                              <DialogTitle className="font-headline uppercase tracking-widest text-primary text-sm">Edit Registration</DialogTitle>
                             </DialogHeader>
                             {editingRegistration && (
-                              <div className="space-y-4 py-4">
-                                <div className="space-y-2">
-                                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Full Name</Label>
-                                    <Input name="fullName" value={editingRegistration.fullName} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                              <div className="space-y-3 py-4 max-h-[70vh] overflow-y-auto pr-1">
+                                <div className="space-y-1">
+                                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Full Name</Label>
+                                  <Input name="fullName" value={editingRegistration.fullName || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Email</Label>
-                                    <Input name="email" type="email" value={editingRegistration.email} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                                <div className="space-y-1">
+                                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Email</Label>
+                                  <Input name="email" type="email" value={editingRegistration.email || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Phone Number</Label>
-                                    <Input name="phoneNumber" value={editingRegistration.phoneNumber || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                                <div className="space-y-1">
+                                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Phone</Label>
+                                  <Input name="phoneNumber" value={editingRegistration.phoneNumber || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">University</Label>
-                                    <Input name="university" value={editingRegistration.university} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                                <div className="space-y-1">
+                                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">University / College</Label>
+                                  <Input name="university" value={editingRegistration.university || editingRegistration.college || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Course/Student ID</Label>
-                                    <Input name="studentId" value={editingRegistration.studentId} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                                <div className="space-y-1">
+                                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Course</Label>
+                                  <Input name="course" value={editingRegistration.course || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
                                 </div>
-                                <div className="flex items-center justify-between glass-panel p-3 border-white/5 bg-white/5 rounded-none">
-                                    <Label htmlFor={`verify-switch-${editingRegistration.id}`} className="text-[10px] uppercase tracking-widest text-muted-foreground">Is Verified</Label>
-                                    <Switch id={`verify-switch-${editingRegistration.id}`} checked={editingRegistration.isVerified} onCheckedChange={(checked) => handleRegistrationSwitchChange('isVerified', checked)} />
+                                <div className="space-y-1">
+                                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">UTR Number</Label>
+                                  <Input name="utrNumber" value={editingRegistration.utrNumber || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none font-mono" />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Payment Status</Label>
-                                    <Select value={editingRegistration.paymentStatus || 'Pending'} onValueChange={(value) => handleRegistrationSelectChange('paymentStatus', value)}>
-                                        <SelectTrigger className="w-full bg-white/5 border-white/10 p-2 text-xs rounded-none text-white h-auto">
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent className="bg-black/80 backdrop-blur-md border-white/10 text-white rounded-none">
-                                            <SelectItem value="Pending">Pending</SelectItem>
-                                            <SelectItem value="Completed">Completed</SelectItem>
-                                            <SelectItem value="Refunded">Refunded</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                <div className="space-y-1">
+                                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Payment Status</Label>
+                                  <Select value={editingRegistration.paymentStatus || 'Pending'} onValueChange={(value) => handleRegistrationSelectChange('paymentStatus', value)}>
+                                    <SelectTrigger className="w-full bg-white/5 border-white/10 text-xs rounded-none text-white">
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-black/80 backdrop-blur-md border-white/10 text-white rounded-none">
+                                      <SelectItem value="Pending">Pending</SelectItem>
+                                      <SelectItem value="Verified">Verified</SelectItem>
+                                      <SelectItem value="Refunded">Refunded</SelectItem>
+                                      <SelectItem value="Failed">Failed</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <div className="flex items-center justify-between glass-panel p-3 border border-white/10">
+                                  <Label htmlFor={`verify-switch-${editingRegistration.id}`} className="text-[10px] uppercase tracking-widest text-muted-foreground">Identity Verified</Label>
+                                  <Switch
+                                    id={`verify-switch-${editingRegistration.id}`}
+                                    checked={editingRegistration.isVerified || false}
+                                    onCheckedChange={(checked) => handleRegistrationSwitchChange('isVerified', checked)}
+                                  />
                                 </div>
                               </div>
                             )}
@@ -1347,6 +1466,7 @@ export default function DashboardPage() {
                           </DialogContent>
                         </Dialog>
 
+                        {/* Delete */}
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive">
@@ -1357,7 +1477,7 @@ export default function DashboardPage() {
                             <AlertDialogHeader>
                               <AlertDialogTitle className="font-headline text-destructive uppercase">Confirm Deletion</AlertDialogTitle>
                               <AlertDialogDescription className="text-muted-foreground">
-                                Are you sure you want to delete the registration for {reg.fullName}? This action cannot be undone.
+                                Are you sure you want to delete the registration for <strong>{reg.fullName}</strong>? This cannot be undone.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>

@@ -51,8 +51,8 @@ const STEP_LABELS = [
 ];
 
 // Replace with your actual UPI details (or use env vars)
-const UPI_ID   = process.env.NEXT_PUBLIC_UPI_ID   ?? 'techkurukshetra@upi';
-const UPI_NAME = process.env.NEXT_PUBLIC_UPI_NAME ?? 'Tech Kurukshetra';
+const UPI_ID   = process.env.NEXT_PUBLIC_UPI_ID   ?? '6352951712-3@okbizaxis';
+const UPI_NAME = process.env.NEXT_PUBLIC_UPI_NAME ?? 'JAIN DHYAN JINESHKUMAR';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
