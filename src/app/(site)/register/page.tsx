@@ -15,6 +15,7 @@ import {
   initiateAnonymousSignIn, useFirestore,
 } from '@/firebase';
 import { doc } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import { EVENTS, CATEGORIES, calculateAmount, EventConfig } from '@/lib/events-config';
 import QRCode from 'qrcode';
 
@@ -179,14 +180,10 @@ export default function RegisterPage() {
     setFormData(prev => ({ ...prev, selectedEventId: event.id, members: newMembers }));
   };
 
-  // ── Save to Firestore ──────────────────────────────────────────────────────
+  // ── Save to Firestore (via server API to bypass security rules) ──────────
   const saveRegistration = useCallback(async (paymentStatus: string, utr?: string) => {
-    if (!user || !firestore || !selectedEvent) return;
-    // Use orderId (unique per registration) as doc ID — NOT user.uid,
-    // since anonymous UIDs are reused and would overwrite previous entries.
-    const docRef = doc(firestore, 'participant_registrations', orderId);
-    await setDocumentNonBlocking(docRef, {
-      id: orderId,
+    if (!selectedEvent) return;
+    const payload = {
       orderId,
       fullName: formData.fullName,
       email: formData.email,
@@ -202,8 +199,22 @@ export default function RegisterPage() {
       utrNumber: utr ?? null,
       registrationDate: new Date().toISOString(),
       isVerified: paymentStatus === 'Verified',
-    }, { merge: true });
-  }, [user, firestore, selectedEvent, formData, orderId, amount]);
+    };
+
+    // Try server-side save first (Admin SDK — no security rules)
+    const res = await fetch('/api/registration/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const result = await res.json();
+
+    // Fallback: if server has no Admin credentials (local dev), write client-side
+    if (!result.success && result.fallbackToClient && firestore) {
+      const colRef = collection(firestore, 'participant_registrations');
+      await addDoc(colRef, { id: orderId, ...payload });
+    }
+  }, [selectedEvent, formData, orderId, amount, firestore]);
 
   // ── Verify Payment ─────────────────────────────────────────────────────────
   const handleVerifyPayment = async () => {
@@ -222,7 +233,7 @@ export default function RegisterPage() {
       const res = await fetch('/api/payment/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ utrNumber: utr, registrationId: user?.uid }),
+        body: JSON.stringify({ utrNumber: utr, registrationId: orderId }),
       });
       const data = await res.json();
 
