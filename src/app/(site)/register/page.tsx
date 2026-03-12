@@ -182,9 +182,11 @@ export default function RegisterPage() {
   // ── Save to Firestore ──────────────────────────────────────────────────────
   const saveRegistration = useCallback(async (paymentStatus: string, utr?: string) => {
     if (!user || !firestore || !selectedEvent) return;
-    const docRef = doc(firestore, 'participant_registrations', user.uid);
+    // Use orderId (unique per registration) as doc ID — NOT user.uid,
+    // since anonymous UIDs are reused and would overwrite previous entries.
+    const docRef = doc(firestore, 'participant_registrations', orderId);
     await setDocumentNonBlocking(docRef, {
-      id: user.uid,
+      id: orderId,
       orderId,
       fullName: formData.fullName,
       email: formData.email,
