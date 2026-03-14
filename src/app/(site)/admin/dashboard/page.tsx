@@ -116,8 +116,55 @@ export default function DashboardPage() {
   const festivalDaysQuery = useMemoFirebase(() => isAuthorized ? query(collection(firestore, 'festivalDays'), orderBy('date', 'asc')) : null, [isAuthorized, firestore]);
   const { data: festivalDays, isLoading: festivalDaysLoading } = useCollection(festivalDaysQuery);
 
-  const registrationsQuery = useMemoFirebase(() => isAuthorized ? collection(firestore, 'participant_registrations') : null, [isAuthorized, firestore]);
-  const { data: registrations, isLoading: registrationsLoading } = useCollection(registrationsQuery);
+  const [registrations, setRegistrations] = useState<any[]>([]);
+  const [registrationsLoading, setRegistrationsLoading] = useState(false);
+
+  // Fetch registrations from Google Sheets via API route
+  const fetchRegistrations = async () => {
+    if (!isAuthorized) return;
+    setRegistrationsLoading(true);
+    try {
+      const res = await fetch('/api/sheets');
+      const json = await res.json();
+      if (json.success && json.data) {
+        // Map Google Sheets headers to the frontend's expected camelCase keys
+        const mapped = json.data.map((row: any) => {
+          let parsedTeam = [];
+          try {
+            parsedTeam = row['Team Members'] ? JSON.parse(row['Team Members']) : [];
+          } catch { }
+
+          return {
+            id: row['Order ID'],
+            orderId: row['Order ID'],
+            fullName: row['Full Name'],
+            email: row['Email'],
+            phoneNumber: row['Phone'],
+            university: row['College'] || row['university'],
+            college: row['College'],
+            course: row['Course'],
+            selectedEvent: row['Event'],
+            eventCategory: row['Category'],
+            teamName: row['Team Name'],
+            teamMembers: parsedTeam,
+            amount: parseFloat(row['Amount Paid']) || 0,
+            paymentStatus: row['Payment Status'],
+            utrNumber: row['UTR Number'],
+            registrationDate: row['Registration Date']
+          };
+        });
+        setRegistrations(mapped.reverse());
+      }
+    } catch (e) {
+      console.error('Failed to load registrations from Sheets', e);
+    } finally {
+      setRegistrationsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRegistrations();
+  }, [isAuthorized]);
   
   const adminUsersQuery = useMemoFirebase(() => isAuthorized ? collection(firestore, 'admin_users') : null, [isAuthorized, firestore]);
   const { data: adminUsers, isLoading: adminUsersLoading } = useCollection(adminUsersQuery);
@@ -559,19 +606,46 @@ export default function DashboardPage() {
         setEditingRegistration((prev: any) => ({ ...prev, [name]: value }));
     };
 
-    const handleDeleteRegistration = (id: string) => {
-      const regRef = doc(firestore, 'participant_registrations', id);
-      deleteDocumentNonBlocking(regRef);
-      toast({ title: "Registration Deleted", description: "The participant's record has been removed." });
+    const handleDeleteRegistration = async (id: string) => {
+      // Instead of Firestore, tell the Sheets API to delete it
+      setRegistrationsLoading(true);
+      try {
+        await fetch('/api/sheets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'delete_registration', payload: { orderId: id } })
+        });
+        toast({ title: "Registration Deleted", description: "The participant's record has been removed." });
+        await fetchRegistrations();
+      } catch (e) {
+        toast({ title: "Error", description: "Could not drop participant from sheets." });
+      } finally {
+        setRegistrationsLoading(false);
+      }
     };
     
-    const handleUpdateRegistration = () => {
+    const handleUpdateRegistration = async () => {
       if (!editingRegistration) return;
       const { id, ...dataToUpdate } = editingRegistration;
-      const regRef = doc(firestore, 'participant_registrations', id);
-      updateDocumentNonBlocking(regRef, dataToUpdate);
-      toast({ title: "Registration Updated", description: "Participant details have been saved." });
-      setEditingRegistration(null);
+      
+      setRegistrationsLoading(true);
+      try {
+        await fetch('/api/sheets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            action: 'update_registration', 
+            payload: { orderId: id, ...dataToUpdate } 
+          })
+        });
+        toast({ title: "Registration Updated", description: "Participant details have been saved to Google Sheets." });
+        setEditingRegistration(null);
+        await fetchRegistrations();
+      } catch (e) {
+        toast({ title: "Error", description: "Failed to update participant in sheets." });
+      } finally {
+        setRegistrationsLoading(false);
+      }
     };
 
   const formatDashboardDate = (dateString: string) => {

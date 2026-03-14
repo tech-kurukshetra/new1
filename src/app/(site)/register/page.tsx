@@ -201,18 +201,16 @@ export default function RegisterPage() {
       isVerified: paymentStatus === 'Verified',
     };
 
-    // Try server-side save first (Admin SDK — no security rules)
-    const res = await fetch('/api/registration/save', {
+    // Send to Google Sheets via proxy API
+    const res = await fetch('/api/sheets', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ action: 'add_registration', payload }),
     });
     const result = await res.json();
-
-    // Fallback: if server has no Admin credentials (local dev), write client-side
-    if (!result.success && result.fallbackToClient && firestore) {
-      const colRef = collection(firestore, 'participant_registrations');
-      await addDoc(colRef, { id: orderId, ...payload });
+    
+    if (!result.success) {
+      console.error('Failed to save to Sheets:', result.message);
     }
   }, [selectedEvent, formData, orderId, amount, firestore]);
 
@@ -230,10 +228,10 @@ export default function RegisterPage() {
       // Save with Pending first so Firestore has the record
       await saveRegistration('Pending', utr);
 
-      const res = await fetch('/api/payment/verify', {
+      const res = await fetch('/api/sheets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ utrNumber: utr, registrationId: orderId }),
+        body: JSON.stringify({ action: 'verify_utr', payload: { utrNumber: utr, orderId } }),
       });
       const data = await res.json();
 
