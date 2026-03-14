@@ -225,23 +225,14 @@ export default function RegisterPage() {
     setIsVerifying(true);
 
     try {
-      // Save with Pending first so Firestore has the record
+      // ONLY save to Google Sheets after they have entered the UTR
       await saveRegistration('Pending', utr);
-
-      const res = await fetch('/api/sheets', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'verify_utr', payload: { utrNumber: utr, orderId } }),
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        setIsSuccess(true);
-      } else {
-        setUtrError(data.message ?? 'Verification failed. Please try again.');
-      }
+      
+      // Assume success since we've already recorded the entry
+      setIsSuccess(true);
+      
     } catch {
-      setUtrError('Network error. Please check your connection and try again.');
+      setUtrError('Failed to save registration. Please try again.');
     } finally {
       setIsVerifying(false);
     }
@@ -597,7 +588,7 @@ export default function RegisterPage() {
               <ChevronLeft className="w-4 h-4 mr-2" /> BACK
             </Button>
             <Button
-              onClick={() => { saveRegistration('Pending'); setStep(5); }}
+              onClick={() => setStep(5)}
               className="bg-primary hover:bg-primary/80 px-6 md:px-10 py-6 font-headline tracking-[0.1em] sm:tracking-[0.3em] rounded-none group accent-glow text-[10px] sm:text-xs w-full sm:w-auto flex justify-center text-center">
               <CreditCard className="w-4 h-4 mr-2 shrink-0" />
               <span className="truncate">PROCEED TO PAYMENT</span>
