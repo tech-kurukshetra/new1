@@ -1472,73 +1472,9 @@ export default function DashboardPage() {
                       </TableCell>
                       {/* Actions */}
                       <TableCell className="text-right">
-                        {/* Edit Dialog */}
-                        <Dialog open={editingRegistration?.id === reg.id} onOpenChange={(isOpen) => !isOpen && setEditingRegistration(null)}>
-                          <DialogTrigger asChild>
-                            <Button variant="ghost" size="icon" onClick={() => setEditingRegistration(reg)} className="text-muted-foreground hover:text-primary">
-                              <Pencil className="w-4 h-4" />
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="glass-panel border-primary/20 bg-black/60 rounded-none max-w-md">
-                            <DialogHeader>
-                              <DialogTitle className="font-headline uppercase tracking-widest text-primary text-sm">Edit Registration</DialogTitle>
-                            </DialogHeader>
-                            {editingRegistration && (
-                              <div className="space-y-3 py-4 max-h-[70vh] overflow-y-auto pr-1">
-                                <div className="space-y-1">
-                                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Full Name</Label>
-                                  <Input name="fullName" value={editingRegistration.fullName || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
-                                </div>
-                                <div className="space-y-1">
-                                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Email</Label>
-                                  <Input name="email" type="email" value={editingRegistration.email || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
-                                </div>
-                                <div className="space-y-1">
-                                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Phone</Label>
-                                  <Input name="phoneNumber" value={editingRegistration.phoneNumber || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
-                                </div>
-                                <div className="space-y-1">
-                                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">University / College</Label>
-                                  <Input name="university" value={editingRegistration.university || editingRegistration.college || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
-                                </div>
-                                <div className="space-y-1">
-                                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Course</Label>
-                                  <Input name="course" value={editingRegistration.course || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
-                                </div>
-                                <div className="space-y-1">
-                                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">UTR Number</Label>
-                                  <Input name="utrNumber" value={editingRegistration.utrNumber || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none font-mono" />
-                                </div>
-                                <div className="space-y-1">
-                                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Payment Status</Label>
-                                  <Select value={editingRegistration.paymentStatus || 'Pending'} onValueChange={(value) => handleRegistrationSelectChange('paymentStatus', value)}>
-                                    <SelectTrigger className="w-full bg-white/5 border-white/10 text-xs rounded-none text-white">
-                                      <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-black/80 backdrop-blur-md border-white/10 text-white rounded-none">
-                                      <SelectItem value="Pending">Pending</SelectItem>
-                                      <SelectItem value="Verified">Verified</SelectItem>
-                                      <SelectItem value="Refunded">Refunded</SelectItem>
-                                      <SelectItem value="Failed">Failed</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-                                <div className="flex items-center justify-between glass-panel p-3 border border-white/10">
-                                  <Label htmlFor={`verify-switch-${editingRegistration.id}`} className="text-[10px] uppercase tracking-widest text-muted-foreground">Identity Verified</Label>
-                                  <Switch
-                                    id={`verify-switch-${editingRegistration.id}`}
-                                    checked={editingRegistration.isVerified || false}
-                                    onCheckedChange={(checked) => handleRegistrationSwitchChange('isVerified', checked)}
-                                  />
-                                </div>
-                              </div>
-                            )}
-                            <DialogFooter>
-                              <Button variant="outline" onClick={() => setEditingRegistration(null)} className="rounded-none uppercase text-xs tracking-widest">Cancel</Button>
-                              <Button onClick={handleUpdateRegistration} className="bg-primary hover:bg-primary/80 rounded-none uppercase text-xs tracking-widest">Save Changes</Button>
-                            </DialogFooter>
-                          </DialogContent>
-                        </Dialog>
+                        <Button variant="ghost" size="icon" onClick={() => setEditingRegistration(reg)} className="text-muted-foreground hover:text-primary">
+                          <Pencil className="w-4 h-4" />
+                        </Button>
 
                         {/* Delete */}
                         <AlertDialog>
@@ -1567,6 +1503,70 @@ export default function DashboardPage() {
               </Table>
             </CardContent>
           </Card>
+
+          {/* Edit Registration Dialog (Moved outside table map) */}
+          <Dialog open={!!editingRegistration} onOpenChange={(isOpen) => !isOpen && setEditingRegistration(null)}>
+            <DialogContent className="glass-panel border-primary/20 bg-black/60 rounded-none max-w-md">
+              <DialogHeader>
+                <DialogTitle className="font-headline uppercase tracking-widest text-primary text-sm">Edit Registration</DialogTitle>
+              </DialogHeader>
+              {editingRegistration && (
+                <div className="space-y-3 py-4 max-h-[70vh] overflow-y-auto pr-1">
+                  <div className="space-y-1">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Full Name</Label>
+                    <Input name="fullName" value={editingRegistration.fullName || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Email</Label>
+                    <Input name="email" type="email" value={editingRegistration.email || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Phone</Label>
+                    <Input name="phoneNumber" value={editingRegistration.phoneNumber || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">University / College</Label>
+                    <Input name="university" value={editingRegistration.university || editingRegistration.college || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Course</Label>
+                    <Input name="course" value={editingRegistration.course || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">UTR Number</Label>
+                    <Input name="utrNumber" value={editingRegistration.utrNumber || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none font-mono" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Payment Status</Label>
+                    <Select value={editingRegistration.paymentStatus || 'Pending'} onValueChange={(value) => handleRegistrationSelectChange('paymentStatus', value)}>
+                      <SelectTrigger className="w-full bg-white/5 border-white/10 text-xs rounded-none text-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-black/80 backdrop-blur-md border-white/10 text-white rounded-none">
+                        <SelectItem value="Pending">Pending</SelectItem>
+                        <SelectItem value="Verified">Verified</SelectItem>
+                        <SelectItem value="Refunded">Refunded</SelectItem>
+                        <SelectItem value="Failed">Failed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex items-center justify-between glass-panel p-3 border border-white/10">
+                    <Label htmlFor={`verify-switch-${editingRegistration.id}`} className="text-[10px] uppercase tracking-widest text-muted-foreground">Identity Verified</Label>
+                    <Switch
+                      id={`verify-switch-${editingRegistration.id}`}
+                      checked={editingRegistration.isVerified || false}
+                      onCheckedChange={(checked) => handleRegistrationSwitchChange('isVerified', checked)}
+                    />
+                  </div>
+                </div>
+              )}
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setEditingRegistration(null)} className="rounded-none uppercase text-xs tracking-widest">Cancel</Button>
+                <Button onClick={handleUpdateRegistration} className="bg-primary hover:bg-primary/80 rounded-none uppercase text-xs tracking-widest">Save Changes</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
         </TabsContent>
 
         <TabsContent value="admins">
