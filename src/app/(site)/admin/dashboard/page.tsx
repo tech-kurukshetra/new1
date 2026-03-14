@@ -131,7 +131,7 @@ export default function DashboardPage() {
         const mapped = json.data.map((row: any) => {
           let parsedTeam = [];
           try {
-            parsedTeam = row['Team Members'] ? JSON.parse(row['Team Members']) : [];
+            parsedTeam = row['TEAM MEMBERS'] ? JSON.parse(row['TEAM MEMBERS']) : [];
           } catch { }
 
           return {
@@ -139,7 +139,7 @@ export default function DashboardPage() {
             orderId: row['ORDER ID'],
             fullName: row['NAME'],
             email: row['EMAIL'],
-            phoneNumber: row['MOBILE NO.'],
+            phoneNumber: row['MOBILE NO.'] || row['MOBILE NO'],
             university: row['INSTITUTION NAME'],
             college: row['INSTITUTION NAME'],
             course: row['BRACH & SEM'],
@@ -149,7 +149,7 @@ export default function DashboardPage() {
             teamMembers: parsedTeam,
             amount: parseFloat(row['AMMOUNT']) || parseFloat(row['AMOUNT']) || 0,
             paymentStatus: row['STATUS'],
-            utrNumber: row['UTR NO'] || row['UTR NO.'] || row['UTR NUMBER'] || row['UTR Number'],
+            utrNumber: row['UTR'] || row['UTR NO'] || row['UTR NO.'] || row['UTR NUMBER'] || row['UTR Number'],
             registrationDate: row['DATE & TIME']
           };
         });
