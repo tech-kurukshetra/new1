@@ -135,22 +135,22 @@ export default function DashboardPage() {
           } catch { }
 
           return {
-            id: row['Order ID'],
-            orderId: row['Order ID'],
-            fullName: row['Full Name'],
-            email: row['Email'],
-            phoneNumber: row['Phone'],
-            university: row['College'] || row['university'],
-            college: row['College'],
-            course: row['Course'],
-            selectedEvent: row['Event'],
-            eventCategory: row['Category'],
-            teamName: row['Team Name'],
+            id: row['ORDER ID'],
+            orderId: row['ORDER ID'],
+            fullName: row['NAME'],
+            email: row['EMAIL'],
+            phoneNumber: row['MOBILE NO.'],
+            university: row['INSTITUTION NAME'],
+            college: row['INSTITUTION NAME'],
+            course: row['BRACH & SEM'],
+            selectedEvent: row['EVENT NAME'],
+            eventCategory: row['CATEGORY'],
+            teamName: row['TEAM NAME'],
             teamMembers: parsedTeam,
-            amount: parseFloat(row['Amount Paid']) || 0,
-            paymentStatus: row['Payment Status'],
-            utrNumber: row['UTR Number'],
-            registrationDate: row['Registration Date']
+            amount: parseFloat(row['AMMOUNT']) || parseFloat(row['AMOUNT']) || 0,
+            paymentStatus: row['STATUS'],
+            utrNumber: row['UTR NO'] || row['UTR NO.'] || row['UTR NUMBER'] || row['UTR Number'],
+            registrationDate: row['DATE & TIME']
           };
         });
         setRegistrations(mapped.reverse());
