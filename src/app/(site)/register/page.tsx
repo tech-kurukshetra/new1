@@ -72,17 +72,17 @@ function buildUpiUrl(amount: number, orderId: string) {
 
 function StepIndicator({ currentStep }: { currentStep: number }) {
   return (
-    <div className="flex items-center justify-center gap-0 mb-12 overflow-x-auto pb-2">
+    <div className="flex items-center justify-start md:justify-center gap-0 mb-8 md:mb-12 overflow-x-auto pb-4 scrollbar-hide w-full max-w-full">
       {STEP_LABELS.map((s, i) => (
-        <div key={s.num} className="flex items-center">
-          <div className={`flex flex-col items-center gap-1.5 px-1`}>
-            <div className={`w-8 h-8 flex items-center justify-center border transition-all duration-300 rounded-none
+        <div key={s.num} className="flex items-center shrink-0">
+          <div className={`flex flex-col items-center gap-1.5 px-2 md:px-1`}>
+            <div className={`w-6 h-6 md:w-8 md:h-8 flex items-center justify-center border transition-all duration-300 rounded-none
               ${currentStep === s.num ? 'border-primary bg-primary/20 text-primary shadow-[0_0_12px_hsl(var(--primary)/0.5)]' :
                 currentStep > s.num ? 'border-primary/50 bg-primary/10 text-primary/70' :
                 'border-white/10 bg-white/5 text-white/30'}`}>
               {currentStep > s.num
-                ? <CheckCircle2 className="w-4 h-4" />
-                : <s.icon className="w-4 h-4" />}
+                ? <CheckCircle2 className="w-3 h-3 md:w-4 md:h-4" />
+                : <s.icon className="w-3 h-3 md:w-4 md:h-4" />}
             </div>
             <span className={`text-[8px] font-headline tracking-widest uppercase whitespace-nowrap
               ${currentStep === s.num ? 'text-primary' : currentStep > s.num ? 'text-primary/50' : 'text-white/20'}`}>
@@ -90,7 +90,7 @@ function StepIndicator({ currentStep }: { currentStep: number }) {
             </span>
           </div>
           {i < STEP_LABELS.length - 1 && (
-            <div className={`w-8 h-px mb-4 transition-all duration-500
+            <div className={`w-4 md:w-8 h-px mb-4 transition-all duration-500
               ${currentStep > s.num + 1 ? 'bg-primary/50' : currentStep > s.num ? 'bg-primary/30' : 'bg-white/10'}`} />
           )}
         </div>
@@ -289,27 +289,27 @@ export default function RegisterPage() {
 
   // ─────────────────────────────────────────────────────────────────────────────
   return (
-    <div className="pt-28 pb-40 px-4 max-w-4xl mx-auto min-h-screen">
+    <div className="pt-20 md:pt-28 pb-32 md:pb-40 px-4 max-w-4xl mx-auto min-h-screen">
 
       {/* Header */}
-      <div className="text-center mb-10">
-        <div className="inline-flex items-center gap-2 px-4 py-1 glass-panel border border-accent/30 rounded-full mb-6 mx-auto">
-          <Zap className="w-4 h-4 text-accent" />
-          <span className="text-[10px] font-headline tracking-[0.3em] text-accent uppercase">Protocol Initiation</span>
+      <div className="text-center mb-6 md:mb-10">
+        <div className="inline-flex items-center gap-2 px-3 py-1 md:px-4 flex-wrap justify-center glass-panel border border-accent/30 rounded-full mb-4 md:mb-6 mx-auto">
+          <Zap className="w-3.5 h-3.5 md:w-4 md:h-4 text-accent" />
+          <span className="text-[9px] md:text-[10px] font-headline tracking-[0.2em] md:tracking-[0.3em] text-accent uppercase text-center w-full sm:w-auto">Protocol Initiation</span>
         </div>
-        <h1 className="font-headline text-5xl md:text-7xl mb-4 tracking-tighter uppercase text-white leading-none">
-          JOIN THE <span className="text-primary text-glow">ARENA</span>
+        <h1 className="font-headline text-4xl sm:text-5xl md:text-7xl mb-3 md:mb-4 tracking-tighter uppercase text-white leading-none">
+          JOIN THE <span className="text-primary text-glow block sm:inline">ARENA</span>
         </h1>
-        <p className="text-muted-foreground max-w-xl mx-auto uppercase tracking-[0.2em] text-[10px] font-bold">
-          Only the team leader registers · Fill in all required details
+        <p className="text-muted-foreground max-w-xl mx-auto uppercase tracking-[0.15em] md:tracking-[0.2em] text-[9px] md:text-[10px] font-bold">
+          Only the team leader registers · Fill in all details
         </p>
       </div>
 
       {/* Important Notice */}
-      <div className="glass-panel border border-accent/30 p-4 mb-8 flex gap-3 items-start">
+      <div className="glass-panel border border-accent/30 p-3 md:p-4 mb-6 md:mb-8 flex gap-3 items-start">
         <Info className="w-4 h-4 text-accent mt-0.5 shrink-0" />
-        <p className="text-[11px] text-muted-foreground tracking-widest uppercase leading-loose">
-          <span className="text-accent font-bold">Team Leader Only:</span> One person registers on behalf of the entire team. Provide accurate team member details in Step 3.
+        <p className="text-[10px] md:text-[11px] text-muted-foreground tracking-widest uppercase leading-loose">
+          <span className="text-accent font-bold">Team Leader Only:</span> One person registers on behalf of the entire team. Provide accurate details in Step 3.
         </p>
       </div>
 
@@ -318,12 +318,12 @@ export default function RegisterPage() {
 
       {/* ── STEP 1: LEADER DETAILS ────────────────────────────────────────── */}
       {step === 1 && (
-        <div className="glass-panel border border-primary/10 p-8 md:p-12 rounded-none bg-black/20 animate-fade-in-up">
-          <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-primary/20 pointer-events-none" />
-          <h2 className="font-headline text-sm tracking-[0.3em] text-primary uppercase flex items-center gap-2 mb-8">
+        <div className="glass-panel border border-primary/10 p-5 sm:p-8 md:p-12 rounded-none bg-black/20 animate-fade-in-up md:mx-0 -mx-2">
+          <div className="absolute top-0 right-0 w-8 h-8 md:w-12 md:h-12 border-t-2 border-r-2 border-primary/20 pointer-events-none" />
+          <h2 className="font-headline text-xs md:text-sm tracking-[0.2em] md:tracking-[0.3em] text-primary uppercase flex items-center gap-2 mb-6 md:mb-8">
             <User className="w-4 h-4" /> Team Leader Details
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <FieldInput id="fullName" label="Full Name" icon={User} placeholder="SURNAME GIVEN NAME"
               value={formData.fullName} onChange={v => setField('fullName', v)} />
             <FieldInput id="email" label="Email Address" icon={Mail} type="email" placeholder="name@domain.com"
@@ -341,7 +341,7 @@ export default function RegisterPage() {
             <Button
               onClick={() => setStep(2)}
               disabled={!canProceedStep1 || isUserLoading}
-              className="bg-primary hover:bg-primary/80 px-10 py-6 font-headline tracking-[0.3em] rounded-none transition-all group"
+              className="bg-primary hover:bg-primary/80 w-full sm:w-auto px-6 md:px-10 py-6 md:py-6 font-headline tracking-[0.2em] md:tracking-[0.3em] rounded-none transition-all group text-xs"
             >
               NEXT: SELECT EVENT
               <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -443,14 +443,14 @@ export default function RegisterPage() {
             </div>
           )}
 
-          <div className="flex justify-between mt-4">
+          <div className="flex flex-col sm:flex-row justify-between mt-4 gap-4">
             <Button variant="outline" onClick={() => setStep(1)}
-              className="border-white/20 hover:border-primary/50 rounded-none px-8 py-6 font-headline tracking-widest">
+              className="border-white/20 hover:border-primary/50 w-full sm:w-auto rounded-none px-6 md:px-8 py-6 font-headline tracking-widest text-xs">
               <ChevronLeft className="w-4 h-4 mr-2" /> BACK
             </Button>
             <Button onClick={() => setStep(3)}
               disabled={!canProceedStep2}
-              className="bg-primary hover:bg-primary/80 px-10 py-6 font-headline tracking-[0.3em] rounded-none transition-all group">
+              className="bg-primary hover:bg-primary/80 w-full sm:w-auto px-6 md:px-10 py-6 font-headline tracking-[0.1em] sm:tracking-[0.3em] rounded-none transition-all group text-xs text-center flex justify-center">
               {selectedEvent && selectedEvent.maxTeam === 1 ? 'NEXT: REVIEW' : 'NEXT: TEAM MEMBERS'}
               <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
@@ -503,13 +503,13 @@ export default function RegisterPage() {
             </>
           )}
 
-          <div className="flex justify-between">
+          <div className="flex flex-col-reverse sm:flex-row justify-between mt-8 gap-4">
             <Button variant="outline" onClick={() => setStep(2)}
-              className="border-white/20 hover:border-primary/50 rounded-none px-8 py-6 font-headline tracking-widest">
+              className="border-white/20 hover:border-primary/50 rounded-none px-6 md:px-8 py-6 font-headline tracking-widest text-xs w-full sm:w-auto">
               <ChevronLeft className="w-4 h-4 mr-2" /> BACK
             </Button>
             <Button onClick={() => setStep(4)} disabled={!canProceedStep3}
-              className="bg-primary hover:bg-primary/80 px-10 py-6 font-headline tracking-[0.3em] rounded-none group">
+              className="bg-primary hover:bg-primary/80 px-6 md:px-10 py-6 font-headline tracking-[0.3em] rounded-none group text-xs w-full sm:w-auto flex justify-center">
               NEXT: REVIEW
               <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
@@ -591,18 +591,18 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <div className="flex justify-between">
+          <div className="flex flex-col-reverse sm:flex-row justify-between gap-4">
             <Button variant="outline" onClick={() => setStep(3)}
-              className="border-white/20 hover:border-primary/50 rounded-none px-8 py-6 font-headline tracking-widest">
+              className="border-white/20 hover:border-primary/50 rounded-none px-6 md:px-8 py-6 font-headline tracking-widest text-xs w-full sm:w-auto">
               <ChevronLeft className="w-4 h-4 mr-2" /> BACK
             </Button>
             <Button
               onClick={() => { saveRegistration('Pending'); setStep(5); }}
               disabled={isUserLoading || !user}
-              className="bg-primary hover:bg-primary/80 px-10 py-6 font-headline tracking-[0.3em] rounded-none group accent-glow">
-              <CreditCard className="w-4 h-4 mr-2" />
-              PROCEED TO PAYMENT
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              className="bg-primary hover:bg-primary/80 px-6 md:px-10 py-6 font-headline tracking-[0.1em] sm:tracking-[0.3em] rounded-none group accent-glow text-[10px] sm:text-xs w-full sm:w-auto flex justify-center text-center">
+              <CreditCard className="w-4 h-4 mr-2 shrink-0" />
+              <span className="truncate">PROCEED TO PAYMENT</span>
+              <ArrowRight className="w-4 h-4 ml-2 shrink-0 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
         </div>
@@ -627,21 +627,21 @@ export default function RegisterPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
               {/* QR + UPI details */}
-              <div className="flex flex-col items-center gap-4">
+              <div className="flex flex-col items-center gap-4 w-full">
                 {qrDataUrl ? (
-                  <div className="p-3 bg-white/5 border border-primary/20 rounded-none">
-                    <img src={qrDataUrl} alt="UPI QR Code" width={220} height={220} />
+                  <div className="p-3 bg-white/5 border border-primary/20 rounded-none shrink-0 overflow-hidden w-full max-w-[246px] mx-auto flex justify-center">
+                    <img src={qrDataUrl} alt="UPI QR Code" className="max-w-full h-auto w-48 sm:w-[220px]" />
                   </div>
                 ) : (
-                  <div className="w-[236px] h-[236px] bg-white/5 border border-primary/20 flex items-center justify-center">
+                  <div className="w-48 h-48 sm:w-[236px] sm:h-[236px] bg-white/5 border border-primary/20 flex items-center justify-center shrink-0 mx-auto">
                     <Loader2 className="w-8 h-8 text-primary animate-spin" />
                   </div>
                 )}
-                <div className="text-center space-y-1">
+                <div className="text-center space-y-1 w-full overflow-hidden break-words">
                   <p className="text-[10px] text-muted-foreground uppercase tracking-widest">UPI ID</p>
-                  <p className="font-mono text-white/90 text-sm select-all">{UPI_ID}</p>
+                  <p className="font-mono text-white/90 text-xs sm:text-sm select-all break-all">{UPI_ID}</p>
                   <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-2">Name</p>
-                  <p className="text-white/70 text-xs tracking-widest">{UPI_NAME}</p>
+                  <p className="text-white/70 text-[10px] sm:text-xs tracking-widest">{UPI_NAME}</p>
                 </div>
               </div>
 
@@ -696,17 +696,17 @@ export default function RegisterPage() {
                 <Button
                   onClick={handleVerifyPayment}
                   disabled={isVerifying || utrNumber.length < 12}
-                  className="w-full bg-primary hover:bg-primary/80 py-7 font-headline tracking-[0.35em] rounded-none accent-glow transition-all text-sm"
+                  className="w-full bg-primary hover:bg-primary/80 py-5 sm:py-7 font-headline sm:tracking-[0.2em] md:tracking-[0.35em] tracking-wider rounded-none accent-glow transition-all text-[10px] sm:text-xs whitespace-normal h-auto min-h-12"
                 >
                   {isVerifying ? (
-                    <div className="flex items-center gap-3">
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                      <span>VERIFYING PAYMENT...</span>
+                    <div className="flex items-center justify-center gap-2 sm:gap-3 w-full">
+                      <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin shrink-0" />
+                      <span className="truncate">VERIFYING PAYMENT...</span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4" />
-                      I&apos;VE PAID — VERIFY & COMPLETE
+                    <div className="flex items-center justify-center gap-2 w-full">
+                      <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 shrink-0" />
+                      <span className="whitespace-normal">I&apos;VE PAID — VERIFY & COMPLETE</span>
                     </div>
                   )}
                 </Button>
