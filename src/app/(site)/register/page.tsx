@@ -598,7 +598,6 @@ export default function RegisterPage() {
             </Button>
             <Button
               onClick={() => { saveRegistration('Pending'); setStep(5); }}
-              disabled={isUserLoading || !user}
               className="bg-primary hover:bg-primary/80 px-6 md:px-10 py-6 font-headline tracking-[0.1em] sm:tracking-[0.3em] rounded-none group accent-glow text-[10px] sm:text-xs w-full sm:w-auto flex justify-center text-center">
               <CreditCard className="w-4 h-4 mr-2 shrink-0" />
               <span className="truncate">PROCEED TO PAYMENT</span>
