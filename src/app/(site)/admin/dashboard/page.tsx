@@ -1524,17 +1524,42 @@ export default function DashboardPage() {
                     <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Phone</Label>
                     <Input name="phoneNumber" value={editingRegistration.phoneNumber || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
                   </div>
-                  <div className="space-y-1">
-                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">University / College</Label>
-                    <Input name="university" value={editingRegistration.university || editingRegistration.college || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Institution Name</Label>
+                      <Input name="university" value={editingRegistration.university || editingRegistration.college || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Branch & Sem</Label>
+                      <Input name="course" value={editingRegistration.course || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                    </div>
                   </div>
-                  <div className="space-y-1">
-                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Course</Label>
-                    <Input name="course" value={editingRegistration.course || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Event Name</Label>
+                      <Input name="selectedEvent" value={editingRegistration.selectedEvent || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Category</Label>
+                      <Input name="eventCategory" value={editingRegistration.eventCategory || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                    </div>
                   </div>
+
                   <div className="space-y-1">
-                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">UTR Number</Label>
-                    <Input name="utrNumber" value={editingRegistration.utrNumber || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none font-mono" />
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Team Name (If Applicable)</Label>
+                    <Input name="teamName" value={editingRegistration.teamName || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Amount Paid</Label>
+                      <Input name="amount" type="number" value={editingRegistration.amount || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none" />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">UTR Number</Label>
+                      <Input name="utrNumber" value={editingRegistration.utrNumber || ''} onChange={handleRegistrationInputChange} className="bg-white/5 border-white/10 rounded-none font-mono" />
+                    </div>
                   </div>
                   <div className="space-y-1">
                     <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Payment Status</Label>
