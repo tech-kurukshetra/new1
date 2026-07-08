@@ -43,7 +43,7 @@ export function SiteFooter() {
                 <div className="space-y-4">
                     <h2 className="font-headline text-2xl text-primary tracking-wider uppercase">TECH KURUKSHETRA</h2>
                     <p className="text-muted-foreground text-sm leading-relaxed max-w-xs">
-                    The most immersive tech battlefield of the year. Join 5,000+ warriors of code to reshape the future.
+                    The most immersive tech battlefield of the year. Join 0+ warriors of code to reshape the future.
                     </p>
                 </div>
 
