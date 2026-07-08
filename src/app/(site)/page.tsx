@@ -94,7 +94,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="flex flex-col items-center justify-center min-h-[calc(100vh-6rem)] text-center">
             <div className="inline-block px-4 py-1 glass-panel border-accent/30 rounded-full mb-6">
-              <span className="text-accent text-xs font-headline tracking-[0.2em] uppercase">10-11 April 2026</span>
+              <span className="text-accent text-xs font-headline tracking-[0.2em] uppercase">January 2027</span>
             </div>
             
             {heroDataLoading ? (
