@@ -13,9 +13,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 
 const statsConfig = [
-    { icon: Code, label: "Competitions", key: "competitions", defaultValue: "10+" },
-    { icon: Globe, label: "Participants", key: "participants", defaultValue: "50K+" },
-    { icon: Cpu, label: "Prize Pool", key: "prizePool", defaultValue: "$21K+" }
+    { icon: Code, label: "Competitions", key: "competitions", defaultValue: "0+" },
+    { icon: Globe, label: "Participants", key: "participants", defaultValue: "0+" },
+    { icon: Cpu, label: "Prize Pool", key: "prizePool", defaultValue: "0+" }
 ];
 
 export default function Home() {
